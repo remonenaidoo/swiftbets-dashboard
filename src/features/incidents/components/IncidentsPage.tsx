@@ -16,8 +16,8 @@ export function IncidentsPage() {
         <h1 className="text-xl font-semibold">Incidents</h1>
         <p className="text-sm text-text-muted">What Steward detected, its evidence-checked diagnosis, and the remediations waiting for you.</p>
       </header>
-      <div className="grid gap-6 xl:grid-cols-[22rem_1fr]">
-        <section aria-labelledby="incident-list-heading">
+      <div className="grid gap-6 lg:grid-cols-[20rem_1fr] lg:items-start">
+        <section aria-labelledby="incident-list-heading" className={clsx(incidentId && 'order-2 lg:order-none')}>
           <h2 id="incident-list-heading" className="sr-only">
             Incident list
           </h2>
@@ -30,7 +30,7 @@ export function IncidentsPage() {
           ) : incidents.data.length === 0 ? (
             <EmptyState title="No incidents">Run a drill from Fault injection to see Steward at work.</EmptyState>
           ) : (
-            <ul className="space-y-2">
+            <ul className="space-y-2 lg:max-h-[calc(100vh-9rem)] lg:overflow-y-auto lg:pr-1">
               {incidents.data.map((incident) => (
                 <li key={incident.incidentId}>
                   <NavLink
@@ -55,7 +55,7 @@ export function IncidentsPage() {
             </ul>
           )}
         </section>
-        <section aria-label="Incident detail" className="min-w-0">
+        <section aria-label="Incident detail" className="min-w-0 lg:sticky lg:top-(--spacing-gutter)">
           {incidentId ? <IncidentDetail incidentId={incidentId} /> : <EmptyState title="Select an incident">Its report, evidence and actions appear here.</EmptyState>}
         </section>
       </div>
