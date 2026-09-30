@@ -1,0 +1,20 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  node:
+    uses: remonenaidoo/swiftbets-platform/.github/workflows/node.yml@main
+    with:
+      image: swiftbets-dashboard
+    permissions:
+      contents: read
+      packages: write
+      security-events: write
