@@ -13,6 +13,7 @@ export const routes = [
       { index: true, element: <LiveFeedPage /> },
       { path: 'anomalies', element: <AnomaliesPage /> },
       { path: 'incidents', element: <IncidentsPage /> },
+      { path: 'incidents/:incidentId', element: <IncidentsPage /> },
       { path: 'faults', element: <FaultsPage /> },
     ],
   },

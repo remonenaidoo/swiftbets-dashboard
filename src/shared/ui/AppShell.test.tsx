@@ -1,23 +1,28 @@
-import { render, screen } from '@testing-library/react';
-import { createMemoryRouter, RouterProvider } from 'react-router';
-import { routes } from '../../app/routes/router';
-
-function renderAt(path: string) {
-  render(<RouterProvider router={createMemoryRouter(routes, { initialEntries: [path] })} />);
-}
+import { screen } from '@testing-library/react';
+import { mockApi, renderRoute } from '../../test/renderWithProviders';
 
 describe('AppShell', () => {
-  it('marks the current section as active in the primary navigation', () => {
-    renderAt('/incidents');
+  it('shows a signed-in operator the navigation with the current section marked', async () => {
+    mockApi((url) =>
+      url === '/api/session'
+        ? { status: 200, body: { subject: 'op-1', roles: ['Operator'], expiresAt: '2030-01-01T00:00:00Z' } }
+        : url.startsWith('/api/steward/incidents')
+          ? { status: 200, body: [] }
+          : undefined,
+    );
 
-    expect(screen.getByRole('navigation', { name: 'Primary' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Incidents' })).toHaveAttribute('aria-current', 'page');
-    expect(screen.getByRole('heading', { name: 'No incidents' })).toBeInTheDocument();
+    renderRoute('/incidents');
+
+    expect(await screen.findByRole('link', { name: 'Incidents' })).toHaveAttribute('aria-current', 'page');
+    expect(await screen.findByRole('heading', { name: 'No incidents' })).toBeInTheDocument();
   });
 
-  it('does not mark other sections as active', () => {
-    renderAt('/');
+  it('asks a signed-out visitor to sign in instead of showing any data', async () => {
+    mockApi((url) => (url === '/api/session' ? { status: 401, body: { status: 401, code: 'unauthenticated', title: 'Unauthorized' } } : undefined));
 
-    expect(screen.getByRole('link', { name: 'Incidents' })).not.toHaveAttribute('aria-current');
+    renderRoute('/incidents');
+
+    expect(await screen.findByRole('heading', { name: 'Sign in' })).toBeInTheDocument();
+    expect(screen.queryByRole('navigation', { name: 'Primary' })).not.toBeInTheDocument();
   });
 });
