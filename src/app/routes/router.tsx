@@ -1,4 +1,5 @@
 import { createBrowserRouter } from 'react-router';
+import { AccountsPage } from '../../features/accounts/components/AccountsPage';
 import { AnomaliesPage } from '../../features/anomalies/components/AnomaliesPage';
 import { FaultsPage } from '../../features/faults/components/FaultsPage';
 import { IncidentsPage } from '../../features/incidents/components/IncidentsPage';
@@ -15,6 +16,7 @@ export const routes = [
       { path: 'incidents', element: <IncidentsPage /> },
       { path: 'incidents/:incidentId', element: <IncidentsPage /> },
       { path: 'faults', element: <FaultsPage /> },
+      { path: 'accounts', element: <AccountsPage /> },
     ],
   },
 ];
