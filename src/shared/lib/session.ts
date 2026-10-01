@@ -5,19 +5,38 @@ import type { SessionInfo } from './types';
 
 export const sessionKey = ['session'] as const;
 
-/** The signed-in operator, or null when signed out. Other errors surface as query errors. */
+async function readSession(): Promise<SessionInfo | null> {
+  try {
+    return await apiRequest<SessionInfo>('/session');
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 401) {
+      return null;
+    }
+    throw error;
+  }
+}
+
+/**
+ * The signed-in operator, or null when signed out. Where the gateway offers demo sign-in (an open preview), a
+ * signed-out visitor is signed in as the demo operator without seeing a form; elsewhere demo sign-in answers 404.
+ */
 export function useSession() {
   return useQuery({
     queryKey: sessionKey,
     queryFn: async () => {
+      const session = await readSession();
+      if (session) {
+        return session;
+      }
       try {
-        return await apiRequest<SessionInfo>('/session');
+        await apiRequest<{ expiresIn: number }>('/session/demo', { method: 'POST' });
       } catch (error) {
-        if (error instanceof ApiError && error.status === 401) {
+        if (error instanceof ApiError && error.status === 404) {
           return null;
         }
         throw error;
       }
+      return readSession();
     },
     staleTime: 60_000,
   });
