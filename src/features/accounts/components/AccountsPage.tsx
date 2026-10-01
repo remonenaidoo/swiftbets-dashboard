@@ -3,6 +3,7 @@ import { ApiError } from '../../../shared/lib/apiError';
 import { EmptyState } from '../../../shared/ui/EmptyState';
 import { useAccountByEmail } from '../api/accounts';
 import { AuditTrail } from '../../compliance/components/AuditTrail';
+import { CaseActions } from '../../compliance/components/CaseActions';
 import { CustomerCompliance } from '../../compliance/components/CustomerCompliance';
 import { StatusForm } from './StatusForm';
 
@@ -62,6 +63,7 @@ export function AccountsPage() {
           </dl>
           <StatusForm key={account.data.status} account={account.data} email={email} />
           <CustomerCompliance userId={account.data.userId} />
+          <CaseActions userId={account.data.userId} />
           <AuditTrail userId={account.data.userId} />
         </article>
       ) : null}

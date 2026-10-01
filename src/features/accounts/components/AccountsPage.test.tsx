@@ -6,7 +6,7 @@ import { AccountsPage } from './AccountsPage';
 // The account card also loads responsible-gambling settings and the audit trail; these tests only care that they load.
 const quiet = { limits: [], restrictions: [], sessionLimitMinutes: null, realityCheckMinutes: null, kycStatus: 'notStarted', excluded: false };
 const withPanels = (handler: Parameters<typeof mockApi>[0]): Parameters<typeof mockApi>[0] => (url, init) =>
-  url.endsWith('/compliance') ? { status: 200, body: quiet } : url.startsWith('/api/admin/audit') ? { status: 200, body: [] } : handler(url, init);
+  url.endsWith('/compliance') ? { status: 200, body: quiet } : url.startsWith('/api/admin/audit') || url.endsWith('/lift-requests') || url.endsWith('/notes') ? { status: 200, body: [] } : handler(url, init);
 
 const account = {
   userId: '0199a000-0000-7000-8000-000000000001',
