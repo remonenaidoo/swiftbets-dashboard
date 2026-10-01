@@ -11,6 +11,7 @@ const navigation = [
   { to: '/', label: 'Live feed', end: true },
   { to: '/anomalies', label: 'Anomalies', end: false },
   { to: '/incidents', label: 'Incidents', end: false },
+  { to: '/accounts', label: 'Accounts', end: false },
   { to: '/faults', label: 'Fault injection', end: false },
 ];
 
