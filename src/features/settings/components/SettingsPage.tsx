@@ -97,7 +97,7 @@ function LimitRow(props: { label: string; settingKey: string; currency: string; 
           New amount
           <input value={amount} onChange={(e) => setAmount(e.target.value)} inputMode="decimal" aria-label={`New ${props.label.toLowerCase()}`} className={field} />
         </label>
-        <button type="button" className={button} disabled={props.disabled || minor === null} onClick={() => minor !== null && props.onSave(props.settingKey, String(minor))}>
+        <button type="button" className={button} disabled={props.disabled || minor === null} aria-label={`Save ${props.label.toLowerCase()}`} onClick={() => minor !== null && props.onSave(props.settingKey, String(minor))}>
           Save
         </button>
         <button type="button" className={button} onClick={() => props.onHistory(props.settingKey)} aria-label={`History of ${props.label.toLowerCase()}`}>

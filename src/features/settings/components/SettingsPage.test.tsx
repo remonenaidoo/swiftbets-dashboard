@@ -49,7 +49,7 @@ describe('SettingsPage', () => {
 
     await userEvent.type(await screen.findByLabelText('Reason for the change'), 'risk review');
     await userEvent.type(screen.getByLabelText('New max payout (usd)'), '1000');
-    await userEvent.click(screen.getAllByRole('button', { name: 'Save' })[3]);
+    await userEvent.click(screen.getByRole('button', { name: 'Save max payout (usd)' }));
 
     expect(calls).toContainEqual({ url: '/api/admin/config/limits.max-payout.USD', method: 'PUT' });
     expect(await screen.findByRole('alert')).toHaveTextContent('Only an admin can change settings.');
