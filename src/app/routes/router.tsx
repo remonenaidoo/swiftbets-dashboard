@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router';
 import { AccountsPage } from '../../features/accounts/components/AccountsPage';
 import { AnomaliesPage } from '../../features/anomalies/components/AnomaliesPage';
+import { SettingsPage } from '../../features/settings/components/SettingsPage';
 import { FinancePage } from '../../features/finance/components/FinancePage';
 import { FaultsPage } from '../../features/faults/components/FaultsPage';
 import { IncidentsPage } from '../../features/incidents/components/IncidentsPage';
@@ -19,6 +20,7 @@ export const routes = [
       { path: 'faults', element: <FaultsPage /> },
       { path: 'accounts', element: <AccountsPage /> },
       { path: 'finance', element: <FinancePage /> },
+      { path: 'settings', element: <SettingsPage /> },
     ],
   },
 ];
