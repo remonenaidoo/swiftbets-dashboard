@@ -12,6 +12,7 @@ const navigation = [
   { to: '/anomalies', label: 'Anomalies', end: false },
   { to: '/incidents', label: 'Incidents', end: false },
   { to: '/accounts', label: 'Accounts', end: false },
+  { to: '/finance', label: 'Finance', end: false },
   { to: '/faults', label: 'Fault injection', end: false },
 ];
 
