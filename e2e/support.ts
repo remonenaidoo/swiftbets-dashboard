@@ -2,12 +2,18 @@ import type { APIRequestContext, Page } from '@playwright/test';
 
 export const password = process.env.DEMO_PASSWORD ?? 'Local-Dev-Demo-1';
 
+/** Opens the dashboard signed in: through the form, or straight in where the stack offers demo sign-in. */
 export async function signIn(page: Page, username = 'operator1') {
-  await page.goto('/');
-  await page.getByLabel('Username').fill(username);
-  await page.getByLabel('Password').fill(password);
-  await page.getByRole('button', { name: 'Sign in' }).click();
-  await page.getByRole('navigation', { name: 'Primary' }).waitFor();
+  await page.goto('/ops/');
+  const nav = page.getByRole('navigation', { name: 'Primary' });
+  const form = page.getByRole('heading', { name: 'Sign in' });
+  await nav.or(form).first().waitFor();
+  if (await form.isVisible()) {
+    await page.getByLabel('Username').fill(username);
+    await page.getByLabel('Password').fill(password);
+    await page.getByRole('button', { name: 'Sign in' }).click();
+  }
+  await nav.waitFor();
 }
 
 /** Collects CSP violations reported by the browser for the whole page lifetime. */

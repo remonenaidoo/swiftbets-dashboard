@@ -25,14 +25,15 @@ export function useSession() {
     queryKey: sessionKey,
     queryFn: async () => {
       const session = await readSession();
-      if (session) {
+      if (session && isOperator(session)) {
         return session;
       }
+      // Signed out, or signed in as a punter from the betting site: take the demo operator seat if one is offered.
       try {
         await apiRequest<{ expiresIn: number }>('/session/demo', { method: 'POST' });
       } catch (error) {
         if (error instanceof ApiError && error.status === 404) {
-          return null;
+          return session;
         }
         throw error;
       }

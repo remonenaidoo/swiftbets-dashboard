@@ -3,6 +3,8 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
+  // Served under /ops by the gateway; the betting site owns the root.
+  base: '/ops/',
   plugins: [react(), tailwindcss()],
   html: {
     // nginx swaps this placeholder for a per-request nonce and sends the matching CSP header.
