@@ -4,7 +4,7 @@ import { useInjectFault, useSpend } from '../api/faults';
 
 const drills = [
   { id: 'stuck-coupon', title: 'Stuck coupon', body: 'The settler drops its next three settlements, so evaluated coupons never settle until the reconciler notices.' },
-  { id: 'wallet-outage', title: 'Wallet outage', body: 'The wallet refuses its next 3,000 calls. Payouts climb the retry ladder and drain once it recovers.' },
+  { id: 'wallet-outage', title: 'Wallet outage', body: 'The wallet refuses every call for 90 seconds. Payouts climb the retry ladder and drain once it recovers.' },
   { id: 'poison-message', title: 'Poison message', body: 'A malformed result is published. It must be parked on the dead-letter queue while the partition keeps flowing.' },
   { id: 'duplicate-settlement', title: 'Duplicate settlement', body: 'A real settlement is re-published under a new event id. Payout must not pay it twice.' },
 ] as const;
