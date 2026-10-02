@@ -92,7 +92,7 @@ export interface CouponSettled {
   couponId: string;
   punterId: string;
   settlementVersion: number;
-  outcome: 'won' | 'lost' | 'void';
+  outcome: 'won' | 'lost' | 'void' | 'cashedOut';
   stake: Money;
   targetPayout: Money;
   settledAt: string;
