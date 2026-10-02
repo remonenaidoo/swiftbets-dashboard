@@ -4,7 +4,7 @@ import { fromView, type FixtureRisk, type FixtureView } from '../model/liability
 
 export interface RiskAlert {
   alertId: string;
-  kind: 'RepeatedBet' | 'CorrelatedStake';
+  kind: 'repeatedBet' | 'correlatedStake';
   fixtureId: string;
   selectionId: string | null;
   punterIds: string[];

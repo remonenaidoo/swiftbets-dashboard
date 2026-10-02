@@ -69,7 +69,7 @@ export function RiskPage() {
             {alerts.data?.map((a) => (
               <li key={a.alertId} className="rounded-md bg-surface-raised p-2">
                 <p className="font-semibold">
-                  {a.kind === 'RepeatedBet' ? 'Repeated bet' : 'Correlated stake'} · {names.get(a.fixtureId) ?? a.fixtureId}
+                  {a.kind === 'repeatedBet' ? 'Repeated bet' : 'Correlated stake'} · {names.get(a.fixtureId) ?? a.fixtureId}
                   {a.selectionId ? ` · ${a.selectionId}` : ''} · {rand(a.totalStakeMinor)}
                 </p>
                 <p className="text-text-muted">

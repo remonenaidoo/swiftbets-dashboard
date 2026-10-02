@@ -20,6 +20,15 @@ describe('RiskPage', () => {
     expect(screen.getByText('home · 2 coupons')).toBeInTheDocument();
   });
 
+  it('labels each alert by its kind', async () => {
+    const alert = { alertId: 'a', kind: 'repeatedBet', fixtureId: 'f-1', selectionId: 'home', punterIds: ['p'], couponIds: ['c'], totalStakeMinor: 300, summary: 'Three in a row.', raisedAt: '2026-10-03T09:00:00Z' };
+    mockApi((url) => (url.includes('/admin/risk/fixtures') ? { status: 200, body: [view] } : url.includes('/admin/risk/alerts') ? { status: 200, body: [alert] } : undefined));
+    renderWithProviders(<RiskPage />);
+
+    expect(await screen.findByText(/^Repeated bet/)).toBeInTheDocument();
+    expect(screen.queryByText(/^Correlated stake/)).not.toBeInTheDocument();
+  });
+
   it('will not suspend a fixture without a reason', async () => {
     mockApi((url) => (url.includes('/admin/risk/fixtures') ? { status: 200, body: [view] } : url.includes('/admin/risk/alerts') ? { status: 200, body: [] } : undefined));
     renderWithProviders(<RiskPage />);
