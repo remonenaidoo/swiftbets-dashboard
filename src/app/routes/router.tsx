@@ -3,6 +3,7 @@ import { AccountsPage } from '../../features/accounts/components/AccountsPage';
 import { AnomaliesPage } from '../../features/anomalies/components/AnomaliesPage';
 import { SettingsPage } from '../../features/settings/components/SettingsPage';
 import { TradingPage } from '../../features/trading/components/TradingPage';
+import { CasinoPage } from '../../features/casino/components/CasinoPage';
 import { FinancePage } from '../../features/finance/components/FinancePage';
 import { FaultsPage } from '../../features/faults/components/FaultsPage';
 import { IncidentsPage } from '../../features/incidents/components/IncidentsPage';
@@ -23,6 +24,7 @@ export const routes = [
       { path: 'finance', element: <FinancePage /> },
       { path: 'settings', element: <SettingsPage /> },
       { path: 'trading', element: <TradingPage /> },
+      { path: 'casino', element: <CasinoPage /> },
     ],
   },
 ];
