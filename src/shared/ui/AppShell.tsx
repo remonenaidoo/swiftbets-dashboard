@@ -13,6 +13,7 @@ const navigation = [
   { to: '/incidents', label: 'Incidents', end: false },
   { to: '/accounts', label: 'Accounts', end: false },
   { to: '/trading', label: 'Trading', end: false },
+  { to: '/casino', label: 'Casino', end: false },
   { to: '/finance', label: 'Finance', end: false },
   { to: '/settings', label: 'Settings', end: false },
   { to: '/faults', label: 'Fault injection', end: false },
