@@ -4,6 +4,7 @@ import { ApiError } from '../../../shared/lib/apiError';
 import { formatMoney, formatTime, shortId } from '../../../shared/lib/format';
 import { useDeltas, useLiveInvalidation } from '../../../shared/realtime/useLive';
 import { feedTypes, toFeedRow, type FeedRow } from '../../live-feed/model/feed';
+import { useTradingFixtures } from '../../trading/api/trading';
 import { fixturesKey, useFixtureRisk, useRiskAlerts, useSetCap } from '../api/risk';
 import { applyLiability, type FixtureRisk, type LiabilityChanged } from '../model/liability';
 
@@ -17,6 +18,8 @@ export function RiskPage() {
   const queryClient = useQueryClient();
   const fixtures = useFixtureRisk();
   const alerts = useRiskAlerts();
+  const offer = useTradingFixtures();
+  const names = new Map((offer.data ?? []).map((f) => [f.fixtureId, `${f.homeTeam} v ${f.awayTeam}`]));
   const [bets, setBets] = useState<FeedRow[]>([]);
   const [editing, setEditing] = useState<string | null>(null);
 
@@ -50,7 +53,7 @@ export function RiskPage() {
           </thead>
           <tbody>
             {fixtures.data?.map((f) => (
-              <FixtureRow key={f.fixtureId} fixture={f} editing={editing === f.fixtureId} onEdit={() => setEditing(editing === f.fixtureId ? null : f.fixtureId)} />
+              <FixtureRow key={f.fixtureId} fixture={f} name={names.get(f.fixtureId)} editing={editing === f.fixtureId} onEdit={() => setEditing(editing === f.fixtureId ? null : f.fixtureId)} />
             ))}
           </tbody>
         </table>
@@ -66,7 +69,7 @@ export function RiskPage() {
             {alerts.data?.map((a) => (
               <li key={a.alertId} className="rounded-md bg-surface-raised p-2">
                 <p className="font-semibold">
-                  {a.kind === 'RepeatedBet' ? 'Repeated bet' : 'Correlated stake'} · {a.fixtureId}
+                  {a.kind === 'RepeatedBet' ? 'Repeated bet' : 'Correlated stake'} · {names.get(a.fixtureId) ?? a.fixtureId}
                   {a.selectionId ? ` · ${a.selectionId}` : ''} · {rand(a.totalStakeMinor)}
                 </p>
                 <p className="text-text-muted">
@@ -97,12 +100,15 @@ export function RiskPage() {
   );
 }
 
-function FixtureRow({ fixture, editing, onEdit }: { fixture: FixtureRisk; editing: boolean; onEdit: () => void }) {
+function FixtureRow({ fixture, name, editing, onEdit }: { fixture: FixtureRisk; name: string | undefined; editing: boolean; onEdit: () => void }) {
   const top = fixture.outcomes[0];
   return (
     <>
       <tr className="border-t border-border">
-        <td className="py-1 font-medium">{fixture.fixtureId}</td>
+        <td className="py-1">
+          <span className="font-medium">{name ?? fixture.fixtureId}</span>
+          {name ? <span className="block text-xs text-text-muted">{fixture.fixtureId}</span> : null}
+        </td>
         <td>{rand(fixture.worstCaseMinor)}</td>
         <td>{top ? `${top.selectionId} · ${top.coupons} coupon${top.coupons === 1 ? '' : 's'}` : '-'}</td>
         <td>
