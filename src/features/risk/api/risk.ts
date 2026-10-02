@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '../../../shared/lib/apiClient';
 import { fromView, type FixtureRisk, type FixtureView } from '../model/liability';
 
@@ -33,4 +33,20 @@ export function useSetCap() {
     onSuccess: (view) =>
       queryClient.setQueryData<FixtureRisk[]>(fixturesKey, (rows) => [...(rows ?? []).filter((r) => r.fixtureId !== view.fixtureId), fromView(view)].sort((a, b) => b.worstCaseMinor - a.worstCaseMinor)),
   });
+}
+
+/** Team names for fixtures, including ones no longer on the open list; a fixture offer no longer knows keeps its id. */
+export function useFixtureNames(fixtureIds: string[]): Map<string, string> {
+  const results = useQueries({
+    queries: fixtureIds.map((id) => ({
+      queryKey: ['risk', 'fixture-name', id],
+      queryFn: async () => {
+        const f = await apiRequest<{ homeTeam: string; awayTeam: string }>(`/fixtures/${encodeURIComponent(id)}`);
+        return `${f.homeTeam} v ${f.awayTeam}`;
+      },
+      staleTime: Infinity,
+      retry: false,
+    })),
+  });
+  return new Map(fixtureIds.flatMap((id, i) => (results[i]?.data ? [[id, results[i].data] as [string, string]] : [])));
 }

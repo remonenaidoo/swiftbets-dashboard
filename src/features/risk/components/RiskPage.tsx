@@ -4,8 +4,7 @@ import { ApiError } from '../../../shared/lib/apiError';
 import { formatMoney, formatTime, shortId } from '../../../shared/lib/format';
 import { useDeltas, useLiveInvalidation } from '../../../shared/realtime/useLive';
 import { feedTypes, toFeedRow, type FeedRow } from '../../live-feed/model/feed';
-import { useTradingFixtures } from '../../trading/api/trading';
-import { fixturesKey, useFixtureRisk, useRiskAlerts, useSetCap } from '../api/risk';
+import { fixturesKey, useFixtureNames, useFixtureRisk, useRiskAlerts, useSetCap } from '../api/risk';
 import { applyLiability, type FixtureRisk, type LiabilityChanged } from '../model/liability';
 
 /** The service default cap, used for a fixture first seen on the live stream before the API has listed it. */
@@ -18,8 +17,7 @@ export function RiskPage() {
   const queryClient = useQueryClient();
   const fixtures = useFixtureRisk();
   const alerts = useRiskAlerts();
-  const offer = useTradingFixtures();
-  const names = new Map((offer.data ?? []).map((f) => [f.fixtureId, `${f.homeTeam} v ${f.awayTeam}`]));
+  const names = useFixtureNames([...new Set([...(fixtures.data ?? []).map((f) => f.fixtureId), ...(alerts.data ?? []).map((a) => a.fixtureId)])]);
   const [bets, setBets] = useState<FeedRow[]>([]);
   const [editing, setEditing] = useState<string | null>(null);
 
