@@ -11,7 +11,7 @@ const providers = [
 
 /** Daily provider reconciliation: our ledger against the provider's report, with drift flagged. */
 export function ReconciliationPanel() {
-  const [providerId, setProviderId] = useState(providers[0].id);
+  const [providerId, setProviderId] = useState('sim-seamless');
   const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
   const runs = useReconciliations(providerId);
   const reconcile = useReconcile();
