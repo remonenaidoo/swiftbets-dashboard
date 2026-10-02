@@ -33,4 +33,37 @@ describe('CasinoPage', () => {
 
     expect(screen.getByRole('button', { name: 'Grant spins' })).toBeDisabled();
   });
+
+  it('reconciles a provider and flags drift', async () => {
+    const run = { runId: 'r', providerId: 'sim-seamless', businessDate: '2026-10-02', ourNet: 1000, providerNet: 900, drift: 100, missingOnOurSide: 0, missingOnProviderSide: 1, status: 'drift', currency: 'ZAR', reconciledAt: '2026-10-02T12:00:00Z' };
+    let done = false;
+    const calls = mockApi((url, init) =>
+      url.includes('/casino/lobby') ? { status: 200, body: lobby }
+      : url.includes('/admin/casino/reconciliation?') ? { status: 200, body: done ? [run] : [] }
+      : url.includes('/admin/casino/reconciliation/sim-seamless/') && init?.method === 'POST' ? ((done = true), { status: 200, body: run })
+      : undefined,
+    );
+    renderWithProviders(<CasinoPage />);
+    await screen.findByText('No reconciliations for this provider yet.');
+
+    await userEvent.click(screen.getByRole('button', { name: 'Reconcile now' }));
+
+    expect(await screen.findByText(/^Drift/)).toBeInTheDocument();
+    expect(calls.some((c) => c.method === 'POST' && c.url.startsWith('/api/admin/casino/reconciliation/sim-seamless/'))).toBe(true);
+  });
+
+  it('says so when the provider report cannot be fetched', async () => {
+    mockApi((url, init) =>
+      url.includes('/casino/lobby') ? { status: 200, body: lobby }
+      : url.includes('/admin/casino/reconciliation?') ? { status: 200, body: [] }
+      : init?.method === 'POST' && url.includes('/reconciliation/') ? { status: 503, body: { code: 'report_unavailable', detail: "The provider's report could not be fetched; try again." } }
+      : undefined,
+    );
+    renderWithProviders(<CasinoPage />);
+    await screen.findByText('No reconciliations for this provider yet.');
+
+    await userEvent.click(screen.getByRole('button', { name: 'Reconcile now' }));
+
+    expect(await screen.findByRole('alert')).toBeInTheDocument();
+  });
 });

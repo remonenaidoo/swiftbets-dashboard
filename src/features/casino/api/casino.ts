@@ -40,3 +40,33 @@ export function useGrantFreeSpins() {
     onSuccess: (grant) => queryClient.invalidateQueries({ queryKey: ['casino', 'free-spins', grant.punterId] }),
   });
 }
+
+export interface ReconciliationRun {
+  runId: string;
+  providerId: string;
+  businessDate: string;
+  ourNet: number;
+  providerNet: number;
+  drift: number;
+  missingOnOurSide: number;
+  missingOnProviderSide: number;
+  status: 'matched' | 'drift';
+  currency: string;
+  reconciledAt: string;
+}
+
+export function useReconciliations(providerId: string) {
+  return useQuery({
+    queryKey: ['casino', 'reconciliation', providerId],
+    queryFn: () => apiRequest<ReconciliationRun[]>(`/admin/casino/reconciliation?providerId=${encodeURIComponent(providerId)}&limit=14`),
+  });
+}
+
+export function useReconcile() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ providerId, date }: { providerId: string; date: string }) =>
+      apiRequest<ReconciliationRun>(`/admin/casino/reconciliation/${encodeURIComponent(providerId)}/${date}`, { method: 'POST' }),
+    onSuccess: (run) => queryClient.invalidateQueries({ queryKey: ['casino', 'reconciliation', run.providerId] }),
+  });
+}
