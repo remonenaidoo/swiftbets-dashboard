@@ -10,6 +10,9 @@ import { FaultsPage } from '../../features/faults/components/FaultsPage';
 import { IncidentsPage } from '../../features/incidents/components/IncidentsPage';
 import { LiveFeedPage } from '../../features/live-feed/components/LiveFeedPage';
 import { AppShell } from '../../shared/ui/AppShell';
+import { RequirePermission } from '../../shared/ui/RequirePermission';
+import { ReportsPage } from '../../features/reports/components/ReportsPage';
+import { RolesPage } from '../../features/roles/components/RolesPage';
 
 export const routes = [
   {
@@ -27,6 +30,8 @@ export const routes = [
       { path: 'trading', element: <TradingPage /> },
       { path: 'risk', element: <RiskPage /> },
       { path: 'casino', element: <CasinoPage /> },
+      { path: 'reports', element: <RequirePermission permission="reports.read"><ReportsPage /></RequirePermission> },
+      { path: 'roles', element: <RequirePermission permission="identity.roles.read"><RolesPage /></RequirePermission> },
     ],
   },
 ];

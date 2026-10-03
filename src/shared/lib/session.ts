@@ -70,3 +70,7 @@ export function useSignOut() {
 export function isOperator(session: SessionInfo | null | undefined): boolean {
   return !!session && session.roles.some((role) => role === 'Operator' || role === 'Admin');
 }
+
+export function can(session: SessionInfo | null | undefined, permission: string | undefined): boolean {
+  return permission === undefined || (session?.permissions ?? []).includes(permission);
+}

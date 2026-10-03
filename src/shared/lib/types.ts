@@ -73,6 +73,8 @@ export interface LiveDelta<T = unknown> {
 export interface SessionInfo {
   subject: string;
   roles: string[];
+  /** Staff permissions from the token; the console hides what is missing, the services refuse it. */
+  permissions?: string[];
   expiresAt: string;
 }
 
