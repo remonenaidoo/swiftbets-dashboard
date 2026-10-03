@@ -1,5 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { apiRequest } from "../../../shared/lib/apiClient";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { apiRequest } from '../../../shared/lib/apiClient';
 
 export interface DayFigures {
   day: string;
@@ -24,19 +24,15 @@ export interface ReconciliationRun {
 
 export function useDaily(from: string, to: string) {
   return useQuery({
-    queryKey: ["reports", "daily", from, to],
-    queryFn: () =>
-      apiRequest<DayFigures[]>(`/admin/reports/daily?from=${from}&to=${to}`),
+    queryKey: ['reports', 'daily', from, to],
+    queryFn: () => apiRequest<DayFigures[]>(`/admin/reports/daily?from=${from}&to=${to}`),
   });
 }
 
 export function useReconciliations() {
   return useQuery({
-    queryKey: ["reports", "reconciliations"],
-    queryFn: () =>
-      apiRequest<ReconciliationRun[]>(
-        "/admin/reports/reconciliations?limit=10",
-      ),
+    queryKey: ['reports', 'reconciliations'],
+    queryFn: () => apiRequest<ReconciliationRun[]>('/admin/reports/reconciliations?limit=10'),
   });
 }
 
@@ -45,9 +41,8 @@ export function useReconcile() {
   return useMutation({
     mutationFn: (day: string) =>
       apiRequest<ReconciliationRun>(`/admin/reports/reconciliations/${day}`, {
-        method: "POST",
+        method: 'POST',
       }),
-    onSuccess: () =>
-      void queryClient.invalidateQueries({ queryKey: ["reports"] }),
+    onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['reports'] }),
   });
 }

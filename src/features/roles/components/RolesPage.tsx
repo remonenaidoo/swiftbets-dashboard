@@ -1,42 +1,26 @@
-import { useState } from "react";
-import { ApiError } from "../../../shared/lib/apiError";
-import { can, useSession } from "../../../shared/lib/session";
-import {
-  findStaff,
-  useRoles,
-  useSetPermission,
-  useSetStaffRoles,
-} from "../api/roles";
+import { useState } from 'react';
+import { ApiError } from '../../../shared/lib/apiError';
+import { can, useSession } from '../../../shared/lib/session';
+import { findStaff, useRoles, useSetPermission, useSetStaffRoles } from '../api/roles';
 
-const staffRoles = ["Trader", "Ops", "Admin"];
-const field =
-  "mt-1 block w-full rounded-md border border-border bg-surface-sunken px-3 py-2 text-text";
+const staffRoles = ['Trader', 'Ops', 'Admin'];
+const field = 'mt-1 block w-full rounded-md border border-border bg-surface-sunken px-3 py-2 text-text';
 
 /** What each staff role may do, and who holds which role. Changes reach staff at their next sign-in. */
 export function RolesPage() {
   const roles = useRoles();
   const setPermission = useSetPermission();
-  const writable = can(useSession().data, "identity.roles.write");
-  const error =
-    setPermission.error instanceof ApiError
-      ? setPermission.error.message
-      : setPermission.error
-        ? "That did not work. Try again."
-        : null;
+  const writable = can(useSession().data, 'identity.roles.write');
+  const error = setPermission.error instanceof ApiError ? setPermission.error.message : setPermission.error ? 'That did not work. Try again.' : null;
 
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-semibold">Roles</h1>
-      <section
-        aria-labelledby="matrix-title"
-        className="space-y-3 rounded-md border border-border p-4 text-sm"
-      >
+      <section aria-labelledby="matrix-title" className="space-y-3 rounded-md border border-border p-4 text-sm">
         <h2 id="matrix-title" className="text-lg font-semibold">
           Permissions by role
         </h2>
-        <p className="text-text-muted">
-          Changes apply when each person next signs in.
-        </p>
+        <p className="text-text-muted">Changes apply when each person next signs in.</p>
         {error ? (
           <p role="alert" className="text-negative">
             {error}
@@ -62,10 +46,7 @@ export function RolesPage() {
                     <span className="text-xs text-text-muted">{p.name}</span>
                   </td>
                   {staffRoles.map((r) => {
-                    const granted =
-                      roles.data?.roles
-                        .find((x) => x.role === r)
-                        ?.permissions.includes(p.name) ?? false;
+                    const granted = roles.data?.roles.find((x) => x.role === r)?.permissions.includes(p.name) ?? false;
                     return (
                       <td key={r} className="text-center">
                         <input
@@ -96,7 +77,7 @@ export function RolesPage() {
 }
 
 function StaffRoles() {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState('');
   const [staff, setStaff] = useState<{
     userId: string;
     email: string | null;
@@ -104,12 +85,7 @@ function StaffRoles() {
   } | null>(null);
   const [lookupError, setLookupError] = useState<string | null>(null);
   const save = useSetStaffRoles();
-  const error =
-    save.error instanceof ApiError
-      ? save.error.message
-      : save.error
-        ? "That did not work. Try again."
-        : null;
+  const error = save.error instanceof ApiError ? save.error.message : save.error ? 'That did not work. Try again.' : null;
 
   const lookUp = async () => {
     setLookupError(null);
@@ -117,28 +93,19 @@ function StaffRoles() {
       setStaff(await findStaff(email.trim()));
     } catch (e) {
       setStaff(null);
-      setLookupError(
-        e instanceof ApiError ? e.message : "That did not work. Try again.",
-      );
+      setLookupError(e instanceof ApiError ? e.message : 'That did not work. Try again.');
     }
   };
 
   return (
-    <section
-      aria-labelledby="staff-title"
-      className="space-y-3 rounded-md border border-border p-4 text-sm"
-    >
+    <section aria-labelledby="staff-title" className="space-y-3 rounded-md border border-border p-4 text-sm">
       <h2 id="staff-title" className="text-lg font-semibold">
         Staff roles
       </h2>
       <div className="flex flex-wrap items-end gap-3">
         <label className="block min-w-64 flex-1 text-text-muted">
           Staff email or username
-          <input
-            className={field}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+          <input className={field} value={email} onChange={(e) => setEmail(e.target.value)} />
         </label>
         <button
           type="button"
@@ -166,9 +133,7 @@ function StaffRoles() {
                   onChange={(e) =>
                     setStaff({
                       ...staff,
-                      roles: e.target.checked
-                        ? [...staff.roles, r]
-                        : staff.roles.filter((x) => x !== r),
+                      roles: e.target.checked ? [...staff.roles, r] : staff.roles.filter((x) => x !== r),
                     })
                   }
                 />
