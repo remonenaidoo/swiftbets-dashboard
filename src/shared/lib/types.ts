@@ -1,6 +1,15 @@
 /** Shapes of the Steward API and the realtime deltas, as the dashboard reads them. */
 
-export type IncidentKind = 'stuckCoupon' | 'walletOutage' | 'poisonMessage' | 'duplicateSettlement';
+export type IncidentKind =
+  | 'stuckCoupon'
+  | 'walletOutage'
+  | 'poisonMessage'
+  | 'duplicateSettlement'
+  | 'paymentDrift'
+  | 'ledgerDrift'
+  | 'paymentsDegraded'
+  | 'notificationsDegraded'
+  | 'providerDrift';
 export type IncidentStatus = 'open' | 'diagnosing' | 'awaitingApproval' | 'diagnosisFailed' | 'resolved';
 export type ActionStatus = 'pending' | 'approved' | 'rejected' | 'executed' | 'failed';
 
